@@ -1,0 +1,4 @@
+Jumlah hidden layer
+Layer 1 [fungsi aktivasi] [jumlah neuron]
+Bobot neuron 1 [a b c d]
+Bobot neuron 2 [e f g h]
