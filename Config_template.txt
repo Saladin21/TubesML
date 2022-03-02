@@ -1,4 +1,7 @@
-Jumlah hidden layer + output
-Layer 1 [fungsi aktivasi] [jumlah neuron]
-Bobot neuron 1 [a b c d]
-Bobot neuron 2 [e f g h]
+[Jumlah hidden layer + output]
+[fungsi aktivasi] [jumlah neuron] {fungsi aktivasi dan jumlah neuron layer ke-1}
+[a b c d] {bobot pada neuron pertama}
+[e f g h] {bobot pada neuron kedua}
+[fungsi aktivasi] [jumlah neuron] {fungsi aktivasi dan jumlah neuron layer ke-2}
+[a b c d] {bobot pada neuron pertama}
+[e f g h] {bobot pada neuron kedua}
