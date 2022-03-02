@@ -10,6 +10,11 @@ class Neuron:
         self.netValue = sum(x * y for x, y in zip(self.bobot, input))
     def getNetValue(self):
         return self.netValue
+    def printNeuron(self):
+        print(self.bobot)
+    
+
+        
 
 # p1 = Neuron()
 # p1.hitungValue([1,2,2],[1,3,5])
