@@ -74,9 +74,13 @@ class Layer:
         else:
             error = (target-output)**2/2
             self.errorFactor = error
+    
+    def computeDeltaBobot(self, prevBobot, learningRate, target, output, input):
+        return prevBobot + learningRate * (target - output) * input
 
 # p1 = Layer(Activation.linear)
 # p1.computeHiddenError(2,0)
+# print(p1.computeDeltaBobot(0,0.3,-1,0,1))
 # print(p1.getError())
 
 # p2 = Layer(Activation.RELU)
