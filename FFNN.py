@@ -7,6 +7,8 @@ activation = {"sigmoid": Activation.sigmoid, "linear": Activation.linear,"RELU":
 
 class FFNN:
     layer_list = []
+    learning_rate = 0
+    expected_output =[]
 
     def __init__(self, filename):
         #destroy object
@@ -54,6 +56,50 @@ class FFNN:
             print(f"Layer {j}:")
             i.printLayer()
             j += 1
+    
+    def setBackwardParameter(self, ex_output, learn_rate):
+        self.expected_output = ex_output
+        self.learning_rate = learn_rate
+
+    def squaredError(output1, output2):
+        if(len(output1) != len(output2)):
+            return -1
+        sum = 0
+        for i in range(len(output1)):
+            sum += (output1[i] - output2[i])**2
+        return sum
+    
+    # belom beres
+    def adjustWeight(self):
+        # ubah weight
+
+        # itung kumulatif error
+        error = 0
+        for layer in self.layer_list:
+            error += layer.getError()
+        return error
+
+    def backward(self, batch_size, error_threshold, max_iteration, input):
+        # split batch
+        batch = []
+        index = 0
+        while index+batch_size < len(input):
+            batch.append(input[index::index+batch_size])
+        batch.append(input[index::])
+
+        # execute
+        iter = 0
+        cumulative_error = 0
+        for current_batch in batch:
+            cumulative_error += self.squaredError(self.predict(current_batch), self.expected_output)
+            cumulative_error += self.adjustWeight()
+        while(cumulative_error > error_threshold and iter < max_iteration):
+            iter += 1
+            cumulative_error = 0
+            for current_batch in batch:
+                cumulative_error += self.squaredError(self.predict(current_batch), self.expected_output)
+                cumulative_error += self.adjustWeight()
+
 
 
 
