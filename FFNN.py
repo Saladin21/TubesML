@@ -1,3 +1,4 @@
+import numpy as np
 from Layer import Layer
 from Activation import Activation
 from Neuron import Neuron
@@ -24,6 +25,7 @@ class FFNN:
                     neuron = Neuron(list(map(int, lines.pop(0).split(" "))))
                     layer.addNeuron(neuron)
                 self.addLayer(layer)
+        self.layer_list[-1].setToOutput()
         return
 
     def addLayer(self, layer : Layer):
@@ -57,27 +59,30 @@ class FFNN:
             i.printLayer()
             j += 1
     
+    # set parameter that used for backward passing
     def setBackwardParameter(self, ex_output, learn_rate):
         self.expected_output = ex_output
         self.learning_rate = learn_rate
 
-    def squaredError(output1, output2):
-        if(len(output1) != len(output2)):
-            return -1
-        sum = 0
-        for i in range(len(output1)):
-            sum += (output1[i] - output2[i])**2
-        return sum
-    
-    # belom beres
-    def adjustWeight(self):
-        # ubah weight
-
-        # itung kumulatif error
-        error = 0
-        for layer in self.layer_list:
-            error += layer.getError()
+    # compute output cost for error margin
+    def computeCost(self, target, output):
+        if (self.layer_list[-1].aktivasi == Activation.softmax):
+            error = -np.log(output)
+        else:
+            error = (target-output)**2/2
         return error
+    
+    # compute and update weight in model  
+    def adjustWeight(self, output):
+        for i in range(len(self.layer_list), 1, -1):
+            # itung error factor
+            if(i == len(self.layer_list)):
+                self.layer_list[i].computeDeltaBobot(self.layer_list[i-1], target = self.expected_output)
+            else:
+                self.layer_list[i].computeDeltaBobot(self.layer_list[i-1], nextLayer = self.layer_list[i+1])
+        for layer in self.layer_list:
+            # ubah bobot
+            layer.updateBobot(self.learning_rate)
 
     def backward(self, batch_size, error_threshold, max_iteration, input):
         # split batch
@@ -87,14 +92,17 @@ class FFNN:
         iter = 0
         cumulative_error = 0
         for current_batch in batch:
-            cumulative_error += self.squaredError(self.predict(current_batch), self.expected_output)
-            cumulative_error += self.adjustWeight()
+            output = self.predict(current_batch)
+            cumulative_error += self.computeCost(output, self.expected_output)
+        self.adjustWeight(output)
         while(cumulative_error > error_threshold and iter < max_iteration):
             iter += 1
             cumulative_error = 0
             for current_batch in batch:
-                cumulative_error += self.squaredError(self.predict(current_batch), self.expected_output)
-                cumulative_error += self.adjustWeight()
+                output = self.predict(current_batch)
+                cumulative_error += self.computeCost(output, self.expected_output)
+            self.adjustWeight(output)
+        self.printModel()
 
 
 

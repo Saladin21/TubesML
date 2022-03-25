@@ -1,10 +1,6 @@
 from Neuron import Neuron
 from Activation import Activation
-import numpy as np
 from activation_function import linear, RELU, sigmoid, softmax 
-
-
-
 
 class Layer:
     def __init__(self, aktivasi: Activation):
@@ -13,6 +9,7 @@ class Layer:
         self.aktivasi = aktivasi
         self.bias = 1
         self.errorFactor = 0
+        self.isOutput = False
 
     # def __init__(self, aktivasi: Activation, array):
     #     self.neurons = []
@@ -25,6 +22,9 @@ class Layer:
 
     def addNeuron(self, neuron: Neuron):
         self.neurons.append(neuron)
+    
+    def setToOutput(self):
+        self.isOutput = True
 
 
     def hitungOutput(self, layerInput):
@@ -61,18 +61,35 @@ class Layer:
         return output
     
     def getError(self):
-        return self.errorFactor
-    
-    def computeHiddenError(self, target, output):
-        if (self.aktivasi == Activation.softmax):
-            error = -np.log(output)
-            self.errorFactor = error
+        error = []
+        for n in self.neurons:
+            error.append(n.getError())
+        return error
+
+    def getNeuronWeight(self):
+        weights = []
+        for n in self.neurons:
+            weights.append(n.getBobot())
+        return weights
+
+    def updateBobot(self, learningRate):
+        for n in self.neurons:
+            n.updateBobot(learningRate)
+   
+    def computeDeltaBobot(self, prevLayer, nextLayer = None, target = None):
+        #cek hidden atau output layer
+        #for all neuron calculateHiddenError atau calculateErrorOut
+        if (self.isOutput):
+            for i in range(self.neurons):
+                self.neurons[i].calculateErrorOut(self.output[i], self.activation, prevLayer.getOutput[i], target[i])
         else:
-            error = (target-output)**2/2
-            self.errorFactor = error
-    
-    def computeDeltaBobot(self, prevBobot, learningRate, target, output, input):
-        return prevBobot + learningRate * (target - output) * input
+            Weights = nextLayer.getNeuronWeight()
+            for i in range(self.neurons):
+                nextWeight = []
+                for j in range(len(Weights)):
+                    nextWeight.append[Weights[j][i]]
+                self.neurons[i].calculateHiddenError(self.output[i], self.activation, prevLayer.getOutput()[i], nextWeight, nextLayer.getError())
+        # return prevBobot + learningRate * (target - output) * input
 
 # p1 = Layer(Activation.linear)
 # p1.computeHiddenError(2,0)
