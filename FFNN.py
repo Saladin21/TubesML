@@ -22,7 +22,7 @@ class FFNN:
                 layer_info = lines.pop(0).split(" ")
                 layer = Layer(activation[layer_info[0]])
                 for j in range(int(layer_info[-1])):
-                    neuron = Neuron(list(map(int, lines.pop(0).split(" "))))
+                    neuron = Neuron(list(map(float, lines.pop(0).split(" "))))
                     layer.addNeuron(neuron)
                 self.addLayer(layer)
         self.layer_list[-1].setToOutput()
