@@ -35,8 +35,9 @@ class FFNN:
         for i in self.layer_list:
             i.hitungOutput(input)
             input = i.getOutput()
+        
         for k in range (len(input)):
-                input[k] = round(input[k])
+                input[k] = round(input[k], 3)
         output = input
         return output
 
@@ -93,9 +94,7 @@ class FFNN:
         # split batch
         batch = [input[i:i+batch_size] for i in range(0,len(input),batch_size)]
 
-        # add input layer
-        layer_input = Layer(activation["linear"])
-        self.layer_list.insert(0, layer_input)
+
         # execute
         iter = 0
         notDone = True
@@ -104,9 +103,15 @@ class FFNN:
             entry_index = 0
             for current_batch in batch:
                 for entri in current_batch:
-                    layer_input.output = entri
+                    # print(entry_index, entri)
                     epoch_result.append(self.predict(entri))
+                    # add input layer
+                    layer_input = Layer(activation["linear"])
+                    self.layer_list.insert(0, layer_input)
+                    self.layer_list[0].output = entri
                     self.computeError(entry_index)
+                    self.layer_list.pop(0)
+                    # self.printModel()
                     entry_index += 1
                 self.adjustWeight()
             cumulative_error = self.computeCost(epoch_result, self.expected_output)

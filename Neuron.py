@@ -18,9 +18,11 @@ class Neuron:
     def printNeuron(self):
         print(self.bobot)
     def updateBobot(self, learningRate):
+        
         for i in range(len(self.bobot)):
             self.bobot[i] -= learningRate * self.deltaWeight[i]
             self.deltaWeight[i] = 0
+        
     def getBobot(self):
         return self.bobot
     def getError(self):
@@ -43,8 +45,10 @@ class Neuron:
         else:
             self.errorFactor = -(target-output)*derived.derived(activation, output)
         
-        for i in range (len(self.bobot)):
-            self.deltaWeight[i] += self.errorFactor * prevOutput[i]
+        self.deltaWeight[0] += self.errorFactor
+        for i in range (1, len(self.bobot)):
+            #JANGAN LUPA ADA BIAS
+            self.deltaWeight[i] += self.errorFactor * prevOutput[i-1]
 
         # print(self.errorFactor)
 
@@ -56,12 +60,12 @@ class Neuron:
     def calculateHiddenError(self,output,activation, prevOutput, nextWeight, nextError):
         #nextWeight : array berisi bobot dari tiap neuron pada layer setelahnya yang menerima input dari neuron ini
          #nextError : array error dari setiap neuron pada layer berikutnya
-        errorOutput = []
+        errorOutput = 0
         # print("next weight: ",nextWeight)
         # print("next error: ", nextError)
         for i in range(len(nextWeight)):
             errorOutput += nextWeight[i] * nextError[i]
-        
+        # print("error Output", errorOutput)
         # if(activation == Activation.softmax):
         #     self.errorFactor = derived.derived_softmax(output,target) 
         if(activation == Activation.linear):
@@ -71,9 +75,13 @@ class Neuron:
         elif(activation == Activation.sigmoid):
             self.errorFactor = errorOutput* derived.derived_linear(output)
 
-        for i in range (len(self.bobot)):
+        # print("deltaWeight sebelum ",self.deltaWeight)
+        # print("error factor", self.errorFactor)
+        self.deltaWeight[0] += self.errorFactor
+        for i in range (1, len(self.bobot)):
             #JANGAN LUPA ADA BIAS
-            self.deltaWeight[i] += self.errorFactor * prevOutput[i]
+            self.deltaWeight[i] += self.errorFactor * prevOutput[i-1]
+        # print("deltaWeight sesudah ",self.deltaWeight)
 
 if (__name__ == "__main__"):
     # p1 = Neuron()
