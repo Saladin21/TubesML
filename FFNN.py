@@ -1,4 +1,5 @@
-from Layer import Layer, Activation
+from Layer import Layer
+from Activation import Activation
 from Neuron import Neuron
 
 

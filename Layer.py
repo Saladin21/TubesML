@@ -1,13 +1,9 @@
 from Neuron import Neuron
-import enum
+from Activation import Activation
 import numpy as np
 from activation_function import linear, RELU, sigmoid, softmax 
 
-class Activation(enum.Enum):
-    linear = 1
-    RELU = 2
-    sigmoid = 3
-    softmax = 4
+
 
 
 class Layer:
