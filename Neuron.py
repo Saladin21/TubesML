@@ -71,7 +71,8 @@ class Neuron:
         elif(activation == Activation.sigmoid):
             self.errorFactor = errorOutput* derived.derived_linear(output)
 
-        for i in range (len(self.errorFactor)):
+        for i in range (len(self.bobot)):
+            #JANGAN LUPA ADA BIAS
             self.deltaWeight[i] += self.errorFactor * prevOutput[i]
 
 if (__name__ == "__main__"):
