@@ -9,7 +9,7 @@ class Neuron:
         self.bobot = bobot
         self.netValue = None
         self.errorFactor = None
-        self.deltaWeight = [0 for i in range(bobot)]
+        self.deltaWeight = [0 for i in range(len(bobot))]
     # fungsi hitungValue menghitung net dari penjumlahan antara perkalian bobot dengan input
     def hitungValue(self,input):
         self.netValue = sum(x * y for x, y in zip(self.bobot, input))
@@ -36,7 +36,8 @@ class Neuron:
         #NOTES
         #-log(pk)
         #ini masukin errorFactor aja?
-        
+        # print("target: ", target)
+        # print('output ', output)
         if(activation == Activation.softmax):
             self.errorFactor =  derived.derived(activation, output, target)
         else:
@@ -44,6 +45,8 @@ class Neuron:
         
         for i in range (len(self.bobot)):
             self.deltaWeight[i] += self.errorFactor * prevOutput[i]
+
+        # print(self.errorFactor)
 
     #Hitung hidden error
     #Hitung gradient 
@@ -54,6 +57,8 @@ class Neuron:
         #nextWeight : array berisi bobot dari tiap neuron pada layer setelahnya yang menerima input dari neuron ini
          #nextError : array error dari setiap neuron pada layer berikutnya
         errorOutput = []
+        # print("next weight: ",nextWeight)
+        # print("next error: ", nextError)
         for i in range(len(nextWeight)):
             errorOutput += nextWeight[i] * nextError[i]
         

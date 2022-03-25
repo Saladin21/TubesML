@@ -15,7 +15,7 @@ def derived_softmax(x, target):
     return softmax(x) if round(softmax(x)) != target else -(1-softmax(x))
 
 def derived(activation : Activation, x, target=None):
-    if (activation == Activation.Relu):
+    if (activation == Activation.RELU):
         return derived_RELU(x)
     elif (activation == Activation.linear):
         return derived_linear(x)

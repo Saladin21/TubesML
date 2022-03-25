@@ -80,15 +80,17 @@ class Layer:
         #cek hidden atau output layer
         #for all neuron calculateHiddenError atau calculateErrorOut
         if (self.isOutput):
-            for i in range(self.neurons):
-                self.neurons[i].calculateErrorOut(self.output[i], self.activation, prevLayer.getOutput[i], target[i])
+            # print("is output layer")
+            for i in range(len(self.neurons)):
+                self.neurons[i].calculateErrorOut(self.output[i], self.aktivasi, prevLayer.getOutput(), target[i])
         else:
+            # print("not output layer")
             Weights = nextLayer.getNeuronWeight()
-            for i in range(self.neurons):
+            for i in range(len(self.neurons)):
                 nextWeight = []
                 for j in range(len(Weights)):
-                    nextWeight.append[Weights[j][i]]
-                self.neurons[i].calculateHiddenError(self.output[i], self.activation, prevLayer.getOutput()[i], nextWeight, nextLayer.getError())
+                    nextWeight.append(Weights[j][i])
+                self.neurons[i].calculateHiddenError(self.output[i], self.aktivasi, prevLayer.getOutput(), nextWeight, nextLayer.getError())
         # return prevBobot + learningRate * (target - output) * input
 
 # p1 = Layer(Activation.linear)

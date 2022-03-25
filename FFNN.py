@@ -66,43 +66,56 @@ class FFNN:
 
     # compute output cost for error margin
     def computeCost(self, target, output):
-        if (self.layer_list[-1].aktivasi == Activation.softmax):
-            error = -np.log(output)
-        else:
-            error = (target-output)**2/2
+        error = 0
+        for i in range(len(target)):
+            if (self.layer_list[-1].aktivasi == Activation.softmax):
+                error += -np.log(output)
+            else:
+                for j in range(len(target[0])):
+                    error += (target[i][j]-output[i][j])**2/2
         return error
     
     # compute and update weight in model  
-    def adjustWeight(self, output):
-        for i in range(len(self.layer_list), 1, -1):
-            # itung error factor
-            if(i == len(self.layer_list)):
-                self.layer_list[i].computeDeltaBobot(self.layer_list[i-1], target = self.expected_output)
-            else:
-                self.layer_list[i].computeDeltaBobot(self.layer_list[i-1], nextLayer = self.layer_list[i+1])
+    def adjustWeight(self):
         for layer in self.layer_list:
             # ubah bobot
             layer.updateBobot(self.learning_rate)
+
+    def computeError(self, entryIndex):
+        for i in range(len(self.layer_list)-1, 0, -1):
+            # itung error factor
+            if(i == len(self.layer_list)-1):
+                self.layer_list[i].computeDeltaBobot(self.layer_list[i-1], target = self.expected_output[entryIndex])
+            else:
+                self.layer_list[i].computeDeltaBobot(self.layer_list[i-1], nextLayer = self.layer_list[i+1])
 
     def backward(self, batch_size, error_threshold, max_iteration, input):
         # split batch
         batch = [input[i:i+batch_size] for i in range(0,len(input),batch_size)]
 
+        # add input layer
+        layer_input = Layer(activation["linear"])
+        self.layer_list.insert(0, layer_input)
         # execute
         iter = 0
-        cumulative_error = 0
-        for current_batch in batch:
-            output = self.predict(current_batch)
-            cumulative_error += self.computeCost(output, self.expected_output)
-        self.adjustWeight(output)
-        while(cumulative_error > error_threshold and iter < max_iteration):
-            iter += 1
-            cumulative_error = 0
+        notDone = True
+        while(notDone):
+            epoch_result = []
+            entry_index = 0
             for current_batch in batch:
-                output = self.predict(current_batch)
-                cumulative_error += self.computeCost(output, self.expected_output)
-            self.adjustWeight(output)
+                for entri in current_batch:
+                    layer_input.output = entri
+                    epoch_result.append(self.predict(entri))
+                    self.computeError(entry_index)
+                    entry_index += 1
+                self.adjustWeight()
+            cumulative_error = self.computeCost(epoch_result, self.expected_output)
+            iter += 1
+            if(not(cumulative_error > error_threshold and iter < max_iteration)):
+                notDone = False
         self.printModel()
+        print("iter: ", iter)
+        print("error: ", cumulative_error)
 
 
 
