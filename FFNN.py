@@ -81,11 +81,7 @@ class FFNN:
 
     def backward(self, batch_size, error_threshold, max_iteration, input):
         # split batch
-        batch = []
-        index = 0
-        while index+batch_size < len(input):
-            batch.append(input[index::index+batch_size])
-        batch.append(input[index::])
+        batch = [input[i:i+batch_size] for i in range(0,len(input),batch_size)]
 
         # execute
         iter = 0
