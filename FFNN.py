@@ -32,13 +32,13 @@ class FFNN:
         self.layer_list.append(layer)
 
     def predict(self, input):
+        output = input.copy()
         for i in self.layer_list:
-            i.hitungOutput(input)
-            input = i.getOutput()
+            i.hitungOutput(output)
+            output = i.getOutput()
         
-        for k in range (len(input)):
-                input[k] = round(input[k], 3)
-        output = input
+        for k in range (len(output)):
+                output[k] = round(output[k], 3)
         return output
 
     def predictBatch(self, input_array):
@@ -97,8 +97,11 @@ class FFNN:
 
         # execute
         iter = 0
+        cumulative_error = 0
         notDone = True
         while(notDone):
+            if(iter == max_iteration):
+                print("error: ", cumulative_error)
             epoch_result = []
             entry_index = 0
             for current_batch in batch:
@@ -107,8 +110,8 @@ class FFNN:
                     epoch_result.append(self.predict(entri))
                     # add input layer
                     layer_input = Layer(activation["linear"])
+                    layer_input.output = entri.copy()
                     self.layer_list.insert(0, layer_input)
-                    self.layer_list[0].output = entri
                     self.computeError(entry_index)
                     self.layer_list.pop(0)
                     # self.printModel()
