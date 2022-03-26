@@ -70,9 +70,11 @@ class FFNN:
         error = 0
         for i in range(len(target)):
             if (self.layer_list[-1].aktivasi == Activation.softmax):
-                error += -np.log(output)
+                for j in range(len(target[i])):
+                    if(target[i][j] == 1):
+                        error += -np.exp(output[i][j])
             else:
-                for j in range(len(target[0])):
+                for j in range(len(target[i])):
                     error += (target[i][j]-output[i][j])**2/2
         return error
     
