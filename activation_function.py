@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 #Linear
 #Input net value
@@ -23,13 +24,16 @@ def sigmoid(x):
 #Output array of result ()
 def softmax(x):
     #Hitung sum dari exp(x)
+    maxEl = max(x)
     sum_value = 0
     for value in x:
-        sum_value += np.exp(x)
+        sum_value += np.exp(value - maxEl)
     arr_result = []
     #Result exp(x)/sum(exp(x))
     for value in x:
-        arr_result.append(np.exp(x)/sum_value)
+        arr_result.append(np.exp(value - maxEl)/sum_value)
+        if math.isnan(arr_result[-1]):
+            print("Is nan", x)
     return arr_result
     
 #DRIVER

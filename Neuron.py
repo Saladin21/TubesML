@@ -41,10 +41,12 @@ class Neuron:
         # print("target: ", target)
         # print('output ', output)
         if(activation == Activation.softmax):
-            self.errorFactor =  derived.derived(activation, output, target)
+            self.errorFactor =  -derived.derived(activation, output, target)
         else:
             self.errorFactor = -(target-output)*derived.derived(activation, output)
         
+        # print("target ", target, "output ", output)
+        print("errorFactor", self.errorFactor)
         self.deltaWeight[0] += self.errorFactor
         for i in range (1, len(self.bobot)):
             #JANGAN LUPA ADA BIAS

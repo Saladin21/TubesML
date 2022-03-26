@@ -39,6 +39,7 @@ class FFNN:
         
         for k in range (len(output)):
                 output[k] = round(output[k], 3)
+        # print("output ", output)
         return output
 
     def predictBatch(self, input_array):
@@ -66,13 +67,13 @@ class FFNN:
         self.learning_rate = learn_rate
 
     # compute output cost for error margin
-    def computeCost(self, target, output):
+    def computeCost(self, output, target):
         error = 0
         for i in range(len(target)):
             if (self.layer_list[-1].aktivasi == Activation.softmax):
                 for j in range(len(target[i])):
                     if(target[i][j] == 1):
-                        error += -np.exp(output[i][j])
+                        error += -np.log(output[i][j])
             else:
                 for j in range(len(target[i])):
                     error += (target[i][j]-output[i][j])**2/2
@@ -119,6 +120,7 @@ class FFNN:
                     # self.printModel()
                     entry_index += 1
                 self.adjustWeight()
+                # self.printModel()
             cumulative_error = self.computeCost(epoch_result, self.expected_output)
             iter += 1
             if(not(cumulative_error > error_threshold and iter < max_iteration)):
