@@ -38,7 +38,7 @@ class FFNN:
             output = i.getOutput()
         
         for k in range (len(output)):
-                output[k] = round(output[k], 3)
+                output[k] = output[k]
         # print("output ", output)
         return output
 
