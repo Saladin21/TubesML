@@ -36,23 +36,19 @@ class FFNN:
         for i in self.layer_list:
             i.hitungOutput(output)
             output = i.getOutput()
-        
-        for k in range (len(output)):
-                output[k] = output[k]
         # print("output ", output)
         return output
 
     def predictBatch(self, input_array):
-        output = []
+        output_array = [] 
         for j in range(len(input_array)):
             input = input_array[j]
+            output = input.copy()
             for i in self.layer_list:
-                i.hitungOutput(input)
-                input = i.getOutput()
-            for k in range (len(input)):
-                input[k] = round(input[k],3)
-            output.append(input)
-        return output
+                i.hitungOutput(output)
+                output = i.getOutput()
+            output_array.append(output)
+        return output_array
 
     def printModel(self):
         j = 1
