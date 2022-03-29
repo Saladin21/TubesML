@@ -9,6 +9,7 @@ activation = {"sigmoid": Activation.sigmoid, "linear": Activation.linear,"RELU":
 class FFNN:
     layer_list = []
     learning_rate = 0
+    cumulative_error = 0
     expected_output =[]
 
     def __init__(self, filename):
@@ -124,6 +125,7 @@ class FFNN:
         self.printModel()
         print("iter: ", iter)
         print("error: ", cumulative_error)
+        self.cumulative_error = cumulative_error
 
 
 
