@@ -9,7 +9,7 @@ activation = {"sigmoid": Activation.sigmoid, "linear": Activation.linear,"RELU":
 class FFNN:
     layer_list = []
     learning_rate = 0
-    cumulative_error = 0
+    cumulative_error = 99999999999999
     expected_output =[]
 
     def __init__(self, filename):
